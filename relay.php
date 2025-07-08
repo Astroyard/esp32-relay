@@ -9,6 +9,14 @@ header("Access-Control-Allow-Origin: *");
 // 🔐 Clé secrète partagée entre ton serveur PHP et Firebase
 $SECRET_KEY = getenv('FIREBASE_SECRET_KEY');
 
+// Vérification clé secrète dans header Authorization
+$headers = getallheaders();
+if (!isset($headers['Authorization']) || $headers['Authorization'] !== $SECRET_KEY) {
+    http_response_code(403);
+    echo json_encode(['error' => 'Forbidden: Clé secrète invalide ou absente']);
+    exit();
+}
+
 // 🔗 URL de ta Firebase Cloud Function (remplace bien par la tienne)
 $firebase_url = 'https://us-central1-helpscape-x.cloudfunctions.net/sendData';
 
