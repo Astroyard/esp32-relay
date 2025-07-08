@@ -7,7 +7,7 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 
 // 🔐 Clé secrète partagée entre ton serveur PHP et Firebase
-$SECRET_KEY = 'xx)$zShnL/E!,:*zBEc9JNGm@A9R?eV-hh9R&$RqQLYrQjG%m>mqsMRQJ%4-zx[rZ%5j~Lz{&Vj@4G,B7RU8sR).EDLE@W^Fka}';
+$SECRET_KEY = getenv('FIREBASE_SECRET_KEY');
 
 // 🔗 URL de ta Firebase Cloud Function (remplace bien par la tienne)
 $firebase_url = 'https://us-central1-helpscape-x.cloudfunctions.net/sendData';
