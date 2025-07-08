@@ -6,25 +6,28 @@ error_reporting(E_ALL);
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 
-// 🔐 Clé secrète partagée entre ton serveur PHP et Firebase (apiKey attendue dans le JSON)
+// Clé secrète attendue
 $SECRET_KEY = getenv('FIREBASE_SECRET_KEY');
-
-// 🔗 URL de ta Firebase Cloud Function (remplace bien par la tienne)
-$firebase_url = 'https://us-central1-helpscape-x.cloudfunctions.net/sendData';
 
 // Récupère les données JSON brutes
 $input = file_get_contents("php://input");
 $data = json_decode($input, true);
 
-// Vérifie les champs nécessaires
-if (!$data || !isset($data['deviceId'])) {
-    http_response_code(400);
-    echo json_encode(["error" => "Champs manquants ou JSON invalide"]);
+error_log("Données reçues : " . print_r($data, true)); // Log pour debug
+
+// Vérifie la clé apiKey dans le JSON reçu
+if (!isset($data['apiKey']) || $data['apiKey'] !== $SECRET_KEY) {
+    error_log("Erreur 403 : clé secrète invalide");
+    http_response_code(403);
+    echo json_encode(["error" => "Clé secrète invalide"]);
     exit;
 }
 
-// Ajoute la clé API dans la requête vers Firebase
-$data['apiKey'] = $SECRET_KEY;
+// Enlève la clé API avant d’envoyer à Firebase
+unset($data['apiKey']);
+
+// URL de la Cloud Function Firebase
+$firebase_url = 'https://us-central1-helpscape-x.cloudfunctions.net/sendData';
 
 // Prépare la requête cURL vers Firebase
 $ch = curl_init($firebase_url);
@@ -44,6 +47,5 @@ if ($response === false) {
 $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
-// Retourne la réponse Firebase au client (ESP32)
 http_response_code($httpcode);
 echo $response;
