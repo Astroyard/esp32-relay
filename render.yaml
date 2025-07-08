@@ -1,7 +1,5 @@
 services:
   - type: web
     name: esp32-relay
-    env: php
+    env: docker
     plan: free
-    buildCommand: ""
-    startCommand: ""
