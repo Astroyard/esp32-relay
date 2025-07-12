@@ -12,9 +12,18 @@ if (!$googleApiKey) {
 // Lire le corps brut de la requête POST (JSON)
 $rawPostData = file_get_contents("php://input");
 
+// Débogage : enregistrer ou afficher ce qui est reçu
+file_put_contents("debug.log", "---- NOUVELLE REQUÊTE ----\n", FILE_APPEND);
+file_put_contents("debug.log", "Contenu brut reçu :\n" . $rawPostData . "\n", FILE_APPEND);
+file_put_contents("debug.log", "Contenu \$_POST :\n" . print_r($_POST, true) . "\n", FILE_APPEND);
+
 if (!$rawPostData) {
     http_response_code(400);
-    echo json_encode(["error" => "Aucune donnée reçue."]);
+    echo json_encode([
+        "error" => "Aucune donnée reçue.",
+        "debug_post" => $_POST,
+        "debug_raw" => $rawPostData
+    ]);
     exit;
 }
 
