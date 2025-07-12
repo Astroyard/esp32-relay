@@ -15,15 +15,6 @@ if (!$data) {
     exit;
 }
 
-// Exemple de réponse simulée Google
-echo json_encode([
-    "location" => [
-        "lat" => 3.848,
-        "lng" => 11.502
-    ],
-    "accuracy" => 1200
-]);
-
 // Récupérer la clé API Google Geolocation à partir de la variable d'environnement
 $googleApiKey = getenv("GOOGLE_API_KEY");
 
