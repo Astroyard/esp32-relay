@@ -1,4 +1,28 @@
 <?php
+header('Content-Type: application/json');
+
+$input = file_get_contents('php://input');
+if (!$input) {
+    http_response_code(400);
+    echo json_encode(["error" => "No JSON input received"]);
+    exit;
+}
+
+$data = json_decode($input, true);
+if (!$data) {
+    http_response_code(400);
+    echo json_encode(["error" => "Invalid JSON"]);
+    exit;
+}
+
+// Exemple de réponse simulée Google
+echo json_encode([
+    "location" => [
+        "lat" => 3.848,
+        "lng" => 11.502
+    ],
+    "accuracy" => 1200
+]);
 
 // Récupérer la clé API Google Geolocation à partir de la variable d'environnement
 $googleApiKey = getenv("GOOGLE_API_KEY");
